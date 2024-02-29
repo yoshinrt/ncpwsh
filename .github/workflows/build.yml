@@ -1,0 +1,43 @@
+# -*- indent-tabs-mode: nil; tab-width: 2 -*-
+name: build vsd_filter
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [push]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    name: MSBuild
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        config:
+          #- Debug
+          - Release
+        platform:
+          #- Win32
+          - x64
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    ## see https://github.com/actions/checkout
+    - uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+
+    ## see https://github.com/microsoft/setup-msbuild
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1
+
+    - name: MSBuild
+      run: msbuild /m /p:Platform=${{ matrix.platform }} /p:Configuration=${{ matrix.config }} ${{env.SOLUTION_FILE_PATH}}
+      
+    - name: Upload binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: ncpwsh-${{ matrix.platform }}-${{ matrix.config }}
+        path: '${{ matrix.platform }}/Release/ncpwsh.exe'
