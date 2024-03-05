@@ -65,7 +65,7 @@ int WINAPI _tWinMain(
 
 	// Create new command line
 
-	std::wstring	strNewCmdLine(_T("powershell -NoLogo -ExecutionPolicy RemoteSigned -File "));
+	std::wstring	strNewCmdLine(_T("C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -NoLogo -ExecutionPolicy RemoteSigned -File "));
 	strNewCmdLine.append(pCmdLine, pExecTail - pCmdLine);
 	strNewCmdLine += _T(".ps1");
 	if(IsQuote(*pCmdLine)) strNewCmdLine += *pCmdLine;
