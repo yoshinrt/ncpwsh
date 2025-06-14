@@ -1,9 +1,14 @@
 # -*- indent-tabs-mode: nil; tab-width: 2 -*-
-name: build vsd_filter
+name: build
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '44 04 1 */2 *'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -37,7 +42,7 @@ jobs:
       run: msbuild /m /p:Platform=${{ matrix.platform }} /p:Configuration=${{ matrix.config }} ${{env.SOLUTION_FILE_PATH}}
       
     - name: Upload binary
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: ncpwsh-${{ matrix.platform }}-${{ matrix.config }}
         path: '${{ matrix.platform }}/Release/ncpwsh.exe'
